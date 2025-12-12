@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 
-const API = "http://localhost:3000"; 
+const API = import.meta.env.VITE_API_URL;
+ 
 
 function useAuth() {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
@@ -211,7 +212,7 @@ function MyRecipes({ auth }) {
 
   const load = async () => {
     try {
-      const res = await fetch(API + "/api/foods", {
+      const res = await fetch(API + "/api/foods/mine", {
         headers: auth.token
           ? { Authorization: "Bearer " + auth.token }
           : {}       
@@ -268,7 +269,7 @@ function AddRecipe({ auth }) {
       const res = await fetch(API + "/api/food", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + auth.token },
-        body: JSON.stringify({ name, description })
+        body: JSON.stringify({ foodname:name, description })
       });
       if (!res.ok) throw new Error(await res.text());
       setName(''); setDescription('');
